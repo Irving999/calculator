@@ -12,13 +12,20 @@
     justify-content: space-evenly;
 }
 
-.result {
+.result-container {
     background: linear-gradient(135deg, #C6EDD7, #95D7AE);
     border: 1px #0D160B solid;
     border-radius: 5px;
     box-shadow: 1px 1px 1px #0D160B;
-    padding: 10px;
+    height: 25px;
+    padding-left: 10px;
+    padding-top: 8px;
     margin-right: 25px;
+    margin-left: auto;
+}
+
+.result {
+    margin: auto 10px auto auto;
 }
 
 .row {
@@ -33,6 +40,8 @@ button {
     padding: 5px 15px;
     border-style: none;
     color: #293241;
+    transition: all 0.1s ease-in-out;
+    cursor: pointer;
 }
 
 .first button {
@@ -40,9 +49,19 @@ button {
     box-shadow: 2px 3px #83dcae;
 }
 
+.first button:active {
+    transform: translateY(2px);
+    box-shadow: 1px 1px #69b08b;
+}
+
 .second button {
     background: linear-gradient(135deg, #D4FFFA, #A7FFF6);
     box-shadow: 2px 3px #85E0D7;
+}
+
+.second button:active {
+    transform: translateY(2px);
+    box-shadow: 1px 1px #6ab3ac;
 }
 
 .third button {
@@ -50,9 +69,19 @@ button {
     box-shadow: 2px 3px #9F91D0;
 }
 
+.third button:active {
+    transform: translateY(2px);
+    box-shadow: 1px 1px #7f74a6;
+}
+
 .fourth button {
     background: linear-gradient(135deg, #FFE9D7, #FFD6BA);
     box-shadow: 2px 3px #E6B99D;
+}
+
+.fourth button:active {
+    transform: translateY(2px);
+    box-shadow: 1px 1px #B8947D;
 }
 
 .fifth button {
@@ -60,10 +89,21 @@ button {
     box-shadow: 2px 3px #D6C466;
 }
 
+.fifth button:active {
+    transform: translateY(2px);
+    box-shadow: 1px 1px #AB9D52;
+}
+
 .first .clear,
 .first .del {
     background: linear-gradient(135deg, #FFD1CD, #FF7A75);
     box-shadow: 2px 3px #D9605B;
+}
+
+.first .clear:active,
+.first .del:active {
+    transform: translateY(2px);
+    box-shadow: 1px 1px #AD4D49;
 }
 
 .first button:hover,
