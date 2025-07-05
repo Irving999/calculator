@@ -32,22 +32,27 @@ function operate(operator, ...args) {
     }
 }
 
-const result = document.querySelector('.result');
+const resultDisplay = document.querySelector('.result');
 const digits = document.querySelectorAll('.digit');
+const operators = document.querySelectorAll('.operator');
+const redbtns = document.querySelectorAll('.redbtns');
 
-let current, lastElem;
+let current, result;
 let input = [];
 
 digits.forEach(digit => {
     digit.addEventListener('click', (e) => {
+        // Removes starting zero
         if (current === undefined) {
-            result.textContent = '';
+            resultDisplay.textContent = '';
+            current = '';
         }
 
         const digitClicked = e.target.textContent.trim();
+
         if (digitClicked >= '0' && digitClicked <= '9') {
-            result.textContent += digitClicked;
-            current = result.textContent;
+            resultDisplay.textContent += digitClicked;
+            current += e.target.textContent;
         } else {
             console.log('Non-digit button clicked:', e.target);
         }
@@ -55,45 +60,93 @@ digits.forEach(digit => {
         
 });
 
-const operators = document.querySelectorAll('.operator');
-
 operators.forEach(operator => {
     operator.addEventListener('click', (e) => {
         const operatorClicked = e.target.textContent.trim();
 
-        // Prevents operator from being first input
+        if (operatorClicked === '-' && current === undefined) {
+            resultDisplay.textContent = '';
+            resultDisplay.textContent = operatorClicked;
+        }
+
+        // Prevents operator from being first input except '-'
         if (current === undefined) return;
         
         if (operatorClicked === '=') {
             input.push(current);
             // Clear the display 
-            result.innerHTML = '';
+            resultDisplay.textContent = '';
             input.push(operatorClicked);
             console.log(input);
-            result.textContent = `${calculate(input)}`;
+            resultDisplay.textContent = `${calculate(input)}`;
             // Prevents = from being pressed again
             current = undefined;
             return;
-        } 
-        // Clear the
-        result.innerHTML = '';
+        }
+
+        const lastChar = resultDisplay.textContent.charAt(resultDisplay.textContent.length - 2);
+
+        // Prevents consecutive operators from being displayed
+        if (['+', '-', '×', '÷', '='].includes(lastChar)) {
+            return;
+        } else {
+            resultDisplay.textContent += ` ${operatorClicked} `;
+        }
 
         if (current !== '') input.push(current);
         
-        lastElem = input[input.length - 1];
+        const lastElem = input[input.length - 1];
 
-        // Prevents consecutive operators from being pressed
-        if (['+', '-', '×', '÷', '='].includes(lastElem)) return;
-        
-        input.push(operatorClicked);
-        current = '';
-        console.log(input);
+        // Prevents consecutive operators from being pushed
+        if (['+', '-', '×', '÷', '='].includes(lastElem)) {
+            return;
+        } else {
+            input.push(operatorClicked);
+            current = '';
+            console.log(input);
+        }
+    });
+});
+
+let operatorDeleted = false;
+
+redbtns.forEach(btn  => {
+    btn.addEventListener('click', (e) => {
+        if (e.target.textContent.trim() === 'Clear') {
+            resultDisplay.textContent = '0';
+            current = undefined;
+            input.length = 0;
+        } else {
+            // Prevents deletion of nothing
+             if (current !== undefined) {
+                console.log(`This is current: ${current}`);
+                //Deleting operator
+                if (current === '') {
+                    const lastItem = input.pop();
+                    current = input.pop(); 
+                    resultDisplay.textContent = input.join(' ');
+                    if (current !== undefined) resultDisplay.textContent += ` ${current}`;
+                    operatorDeleted = true;
+                } else {
+                    // Deleting digit from current number
+                    current = current.slice(0, -1);
+
+                    if (input.length > 0) {
+                        resultDisplay.textContent = input.join(' ');
+                        if (current.length > 0) {
+                            resultDisplay.textContent += ` ${current}`;
+                        }
+                    } else {
+                        resultDisplay.textContent = current || '';
+                    }
+                }                
+            }
+        }
     });
 });
 
 function calculate(arr) {
     let i = 0;
-    let result;
 
     while (true) {
         if (arr[i] === '=') break;
@@ -122,4 +175,4 @@ function calculate(arr) {
     result = arr[i - 1];
     arr.length = 0;
     return result;
-}
+};
