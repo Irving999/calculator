@@ -39,6 +39,7 @@ const redbtns = document.querySelectorAll('.redbtns');
 
 let current, result;
 let input = [];
+let numberDeleted = false;
 
 digits.forEach(digit => {
     digit.addEventListener('click', (e) => {
@@ -51,8 +52,17 @@ digits.forEach(digit => {
         const digitClicked = e.target.textContent.trim();
 
         if (digitClicked >= '0' && digitClicked <= '9') {
-            resultDisplay.textContent += digitClicked;
-            current += e.target.textContent;
+
+            // Prevents current and operator from concatenating after current is fully deleted
+            if (numberDeleted === true) {
+                resultDisplay.textContent += ` ${digitClicked}`;
+                numberDeleted = false;
+                return;
+            }
+
+            resultDisplay.textContent += `${digitClicked}`;
+            current += digitClicked;
+            console.log(`This is current ${current}`);
         } else {
             console.log('Non-digit button clicked:', e.target);
         }
@@ -65,8 +75,9 @@ operators.forEach(operator => {
         const operatorClicked = e.target.textContent.trim();
 
         if (operatorClicked === '-' && current === undefined) {
-            resultDisplay.textContent = '';
             resultDisplay.textContent = operatorClicked;
+            input.push(operatorClicked);
+            console.log(input);
         }
 
         // Prevents operator from being first input except '-'
@@ -108,7 +119,7 @@ operators.forEach(operator => {
     });
 });
 
-let operatorDeleted = false;
+
 
 redbtns.forEach(btn  => {
     btn.addEventListener('click', (e) => {
@@ -119,25 +130,26 @@ redbtns.forEach(btn  => {
         } else {
             // Prevents deletion of nothing
              if (current !== undefined) {
-                console.log(`This is current: ${current}`);
-                //Deleting operator
-                if (current === '') {
-                    const lastItem = input.pop();
+                // Deleting operator
+                if (current === '' && resultDisplay.textContent) {
+                    input.pop();
                     current = input.pop(); 
                     resultDisplay.textContent = input.join(' ');
-                    if (current !== undefined) resultDisplay.textContent += ` ${current}`;
-                    operatorDeleted = true;
+                    resultDisplay.textContent += ` ${current}`;
+                    numberDeleted = false;
                 } else {
                     // Deleting digit from current number
                     current = current.slice(0, -1);
-
                     if (input.length > 0) {
                         resultDisplay.textContent = input.join(' ');
                         if (current.length > 0) {
                             resultDisplay.textContent += ` ${current}`;
                         }
+                        numberDeleted = true;
                     } else {
                         resultDisplay.textContent = current || '';
+                        console.log(`I am display ${resultDisplay.textContent}`)
+
                     }
                 }                
             }
